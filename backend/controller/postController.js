@@ -42,4 +42,6 @@ const getApplication = async (req, res) => {
   }
 };
 
+
+
 module.exports = { getPosts, getPostByOwnerId, getApplication };
