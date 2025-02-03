@@ -1,45 +1,52 @@
-const { application } = require("express");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema({
-    title:{
-        type:String,
-        required:true
+const postSchema = new Schema(
+  {
+    ownerGoogleId: {
+        type: String,
+        ref: "Profile",
+        required: true,
     },
-    roleReq:{
-        type:[String],
-        required:true
+    title: {
+      type: String,
+      required: true,
     },
-    desc:{
-        type:String,
-        maxlength:500
+    roleReq: {
+      type: [String],
+      required: true,
     },
-    jobType:{
-        type:String,
-        enum:["Paid","Unpaid"],
-        required:true
+    desc: {
+      type: String,
+      maxlength: 500,
     },
-    image:{
-        type:String
+    jobType: {
+      type: String,
+      enum: ["Paid", "Unpaid"],
+      required: true,
     },
-    applications:[
-        {
-            googleId:{
-                type:String,
-                ref:"Profile",
-                required:true
-            },
-            appliedAt:{
-                type:Date,
-                default:Date.now
-            },
+    image: {
+      type: String,
+    },
+    domain: {
+        type: String,
+        required: true,
+    },
+    applications: [
+      {
+        googleId: {
+          type: String,
+          ref: "Profile",
+          required: true,
         },
+        appliedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
     ],
-    cretaedAt:{
-        type:Date,
-        default:Date.now
-    },
-});
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model("Post",postSchema);
+module.exports = mongoose.model("Post", postSchema);

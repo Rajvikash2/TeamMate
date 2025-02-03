@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const profileRoute = require('./route/profileRoute');
+const postRoute = require('./route/postRoute');
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,7 @@ app.use((req,res,next)=>{
 })
 
 app.use("/profile", profileRoute);
+app.use("/post", postRoute);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
