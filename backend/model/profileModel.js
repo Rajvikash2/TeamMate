@@ -31,6 +31,7 @@ const profileSchema = new Schema(
       type: String,
       maxlength: 500,
     },
+
   },
   { timestamps: true }
 );

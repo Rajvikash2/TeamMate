@@ -10,7 +10,10 @@ const getSavedProject = async (req, res) => {
 
     // Find saved projects by the user
     const savedProjects = await SavedProject.find({ googleId }).populate(
-      "postId"
+      {
+        path:"postId",
+        select:"-applications",
+      }
     );
     res.status(200).json(savedProjects);
   } catch (error) {
