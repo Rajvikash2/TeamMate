@@ -42,6 +42,35 @@ const getApplication = async (req, res) => {
   }
 };
 
+// upadate the post
 
+const updatePost = async(req,res)=>{
+  try{
+    const{postId,googleId}=req.params;
+    const{title,roleReq,desc,jobType,image,domain} = req.body;
+    if(!postId || !googleId){
+      return res.status(400).json({error:"Post ID and Google ID is required"});
+    }
+    const post = await Post.findById(postId);
+    if(!post){
+      return res.status(404).json({error:"Post not found"});
+    }
+    if(post.ownerGoogleId!==googleId){
+      return res.status(401).json({error:"Unauthorized"});
+    }
+    post.title = title;
+    post.roleReq = roleReq;
+    post.desc = desc;
+    post.jobType = jobType;
+    post.image = image;
+    post.domain = domain;
+    const updatedPost =  await post.save();
+    res.json({success:true,updatedPost});
+  }
+  catch(error){
+    console.error("Error updating post:",error);
+    res.status(500).json({error:"Internal Server Error"});
+  }
+}
 
-module.exports = { getPosts, getPostByOwnerId, getApplication };
+module.exports = { getPosts, getPostByOwnerId, getApplication, updatePost };
