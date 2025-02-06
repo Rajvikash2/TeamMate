@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const profileRoute = require('./route/profileRoute');
 const postRoute = require('./route/postRoute');
+const bookmarkRoute = require('./route/bookmarkRoute');
 
 const app = express();
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use((req,res,next)=>{
 
 app.use("/profile", profileRoute);
 app.use("/post", postRoute);
+app.use("/bookmark", bookmarkRoute);
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)
