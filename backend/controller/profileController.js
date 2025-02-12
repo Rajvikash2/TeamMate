@@ -43,8 +43,7 @@ const addProfile = async(req,res)=>{
   }
   catch(error){
     console.error("Error adding profile:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+c  }
 }
 
 const updateProfile = async (req, res) => {

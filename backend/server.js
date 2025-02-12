@@ -1,30 +1,36 @@
-require('dotenv').config();
-const express = require('express');
-const mongoose = require('mongoose');
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
 
-const profileRoute = require('./route/profileRoute');
-const postRoute = require('./route/postRoute');
-const bookmarkRoute = require('./route/bookmarkRoute');
+const profileRoute = require("./route/profileRoute");
+const postRoute = require("./route/postRoute");
+const bookmarkRoute = require("./route/bookmarkRoute");
+const application = require("./route/applicationRoute");
 
 const app = express();
 app.use(express.json());
 
-app.use((req,res,next)=>{
-    console.log(req.path,req.method);
-    next();
-})
+app.use((req, res, next) => {
+  console.log(req.path, req.method);
+  next();
+});
 
 app.use("/profile", profileRoute);
 app.use("/post", postRoute);
 app.use("/bookmark", bookmarkRoute);
+app.use("/apply", application);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-.then(()=>{
-    app.listen(process.env.PORT,()=>{
-        console.log("conected to db & server is running on port",process.env.PORT)
-    })
-})
-.catch((error)=>{
-    console.log("Failed to connect to db",error);
-})
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    app.listen(process.env.PORT, () => {
+      console.log(
+        "conected to db & server is running on port",
+        process.env.PORT
+      );
+    });
+  })
+  .catch((error) => {
+    console.log("Failed to connect to db", error);
+  });

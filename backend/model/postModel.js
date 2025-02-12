@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 const postSchema = new Schema(
   {
     ownerGoogleId: {
-        type: String,
-        ref: "Profile",
-        required: true,
+      type: String,
+      ref: "Profile",
+      required: true,
     },
     title: {
       type: String,
@@ -29,22 +29,22 @@ const postSchema = new Schema(
       type: String,
     },
     domain: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
-    applications: [
-      {
-        googleId: {
-          type: String,
-          ref: "Profile",
-          required: true,
-        },
-        appliedAt: {
-          type: Date,
-          default: Date.now,
-        },
-      },
-    ],
+    // applications: [
+    //   {
+    //     googleId: {
+    //       type: String,
+    //       ref: "Profile",
+    //       required: true,
+    //     },
+    //     appliedAt: {
+    //       type: Date,
+    //       default: Date.now,
+    //     },
+    //   },
+    // ],
   },
   { timestamps: true }
 );
