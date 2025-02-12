@@ -42,6 +42,34 @@ const getApplication = async (req, res) => {
   }
 };
 
+const createPost = async (req, res) => {
+  try{
+    const { ownerGoogleId } = req.params;
+    if(!ownerGoogleId){
+      return res.status(400).json({error:"Google ID is required"});
+    }
+
+    const {title, roleReq, desc, jobType, image, domain} = req.body;
+    if(!title || !roleReq || !desc || !jobType || !domain){
+      return res.status(400).json({error:"All fields are required"});
+    }
+    const post = new Post({
+      ownerGoogleId,
+      title,
+      roleReq,
+      desc,
+      jobType,
+      image: image || "",
+      domain,
+    });
+    const newPost = await post.save();
+    res.status(201).json({success:true,newPost});
+  }catch(error){
+    console.error("Error Creating post:",error);
+    res.status(500).json({error:"Internal Server Error"});
+  }
+}
+
 // upadate the post
 
 const updatePost = async(req,res)=>{
@@ -73,4 +101,4 @@ const updatePost = async(req,res)=>{
   }
 }
 
-module.exports = { getPosts, getPostByOwnerId, getApplication, updatePost };
+module.exports = { getPosts, getPostByOwnerId, getApplication, createPost, updatePost };
