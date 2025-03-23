@@ -11,6 +11,12 @@ const profileSchema = new Schema(
       type: String,
       required: true,
     },
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true, 
+    },
     email: {
       type: String,
       required: true,
@@ -31,7 +37,6 @@ const profileSchema = new Schema(
       type: String,
       maxlength: 500,
     },
-
   },
   { timestamps: true }
 );

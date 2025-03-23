@@ -3,12 +3,11 @@ const Post = require("../model/postModel");
 
 const getSavedProject = async (req, res) => {
   try {
-    const { googleId } = req.params; // Assuming googleId is stored in session
+    const { googleId } = req.params;
     if (!googleId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    // Find saved projects by the user
     const savedProjects = await SavedProject.find({ googleId }).populate(
       {
         path:"postId",

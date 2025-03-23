@@ -1,12 +1,11 @@
 const express = require("express");
-const { getProfile,addProfile, updateProfile, deleteProfile, searchProfile } = require("../controller/profileController");
-
+const { getProfile, addProfile, updateProfile, deleteProfile, searchProfile } = require("../controller/profileController");
 const router = express.Router();
 
-router.get("/:googleId", getProfile);
-router.post("/:googleId",addProfile);
-router.put("/:googleId", updateProfile);
-router.delete("/:googleId", deleteProfile);
-router.get("/", searchProfile);
+router.get("/:username", getProfile); 
+router.post("/", addProfile); 
+router.put("/:username", updateProfile); 
+router.delete("/:username", deleteProfile);
+router.get("/", searchProfile); 
 
 module.exports = router;

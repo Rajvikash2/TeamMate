@@ -1,14 +1,15 @@
 const Profile = require("../model/profileModel");
+const generateUsername = require("../utils/generateUsername");
 
-//get by googleId
+// Get profile by username
 const getProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const profile = await Profile.findOne({ googleId });
+    const profile = await Profile.findOne({ username });
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
     }
@@ -20,43 +21,59 @@ const getProfile = async (req, res) => {
 };
 
 // Add a profile
-const addProfile = async(req,res)=>{
-  try{
-    const{googleId} = req.params;
-    if(!googleId){
-      return res.status(400).json({error:"Google ID is required"});
+const addProfile = async (req, res) => {
+  try {
+    const { googleId, name, email, skills, doi, githubLink, bio } = req.body;
+
+    if (
+      !googleId ||
+      !name ||
+      !email ||
+      !skills ||
+      !doi ||
+      !githubLink ||
+      !bio
+    ) {
+      return res.status(400).json({ error: "All fields are required" });
     }
-    const {name,email,skills,doi,githubLink,bio} = req.body;
-    if(!name || !email || !skills || !doi || !githubLink || !bio){
-      return res.status(400).json({error:"All fields are required"});
+
+    // Generate unique username
+    let username = generateUsername(name);
+    let usernameExists = await Profile.findOne({ username });
+
+    // Ensure username uniqueness
+    while (usernameExists) {
+      username = generateUsername(name);
+      usernameExists = await Profile.findOne({ username });
     }
+
     const newProfile = await Profile.create({
       googleId,
       name,
+      username,
       email,
       skills,
       doi,
       githubLink,
-      bio,  
+      bio,
     });
+
     res.status(201).json(newProfile);
-  }
-  catch(error){
+  } catch (error) {
     console.error("Error adding profile:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-}
+};
 
-//update profile by googleId
 const updateProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
-      { googleId },
+      { username },
       { $set: req.body },
       { new: true, runValidators: true }
     );
@@ -71,15 +88,14 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// Delete profile by googleId
 const deleteProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const deletedProfile = await Profile.findOneAndDelete({ googleId });
+    const deletedProfile = await Profile.findOneAndDelete({ username });
     if (!deletedProfile) {
       return res.status(404).json({ error: "Profile not found" });
     }
@@ -100,9 +116,10 @@ const searchProfile = async (req, res) => {
 
     const profiles = await Profile.find({
       $or: [
+        { username: { $regex: query, $options: "i" } },
         { name: { $regex: query, $options: "i" } },
-        { skills: { $regex: query, $options: "i" } },
         { email: { $regex: query, $options: "i" } },
+        { skills: { $in: [query] } },
       ],
     });
 
@@ -113,4 +130,10 @@ const searchProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, addProfile, updateProfile, deleteProfile, searchProfile };
+module.exports = {
+  getProfile,
+  addProfile,
+  updateProfile,
+  deleteProfile,
+  searchProfile,
+};
