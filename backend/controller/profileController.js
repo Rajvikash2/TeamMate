@@ -1,5 +1,6 @@
 const Profile = require("../model/profileModel");
 
+//get by googleId
 const getProfile = async (req, res) => {
   try {
     const { googleId } = req.params;
@@ -19,7 +20,6 @@ const getProfile = async (req, res) => {
 };
 
 // Add a profile
-
 const addProfile = async(req,res)=>{
   try{
     const{googleId} = req.params;
@@ -46,6 +46,7 @@ const addProfile = async(req,res)=>{
 c  }
 }
 
+//update profile by googleId
 const updateProfile = async (req, res) => {
   try {
     const { googleId } = req.params;
@@ -111,4 +112,4 @@ const searchProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile,addProfile, updateProfile, deleteProfile, searchProfile };
+module.exports = { getProfile, addProfile, updateProfile, deleteProfile, searchProfile };

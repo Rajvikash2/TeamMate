@@ -71,7 +71,6 @@ const createPost = async (req, res) => {
 }
 
 // upadate the post
-
 const updatePost = async(req,res)=>{
   try{
     const{postId,googleId}=req.params;
