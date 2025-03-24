@@ -1,14 +1,15 @@
 const Profile = require("../model/profileModel");
+const generateUsername = require("../utils/generateUsername");
 
-//get by googleId
+// Get profile by username
 const getProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const profile = await Profile.findOne({ googleId });
+    const profile = await Profile.findOne({ username });
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
     }
@@ -19,43 +20,78 @@ const getProfile = async (req, res) => {
   }
 };
 
+const getProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find({}, "username name");
+
+    if (!profiles || profiles.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No profiles found", profiles: [] });
+    }
+
+    res.status(200).json({ profiles });
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 // Add a profile
-const addProfile = async(req,res)=>{
-  try{
-    const{googleId} = req.params;
-    if(!googleId){
-      return res.status(400).json({error:"Google ID is required"});
+const addProfile = async (req, res) => {
+  try {
+    const {
+      googleId,
+      name,
+      email,
+      githubLink,
+      bio = "",
+      skills = [],
+      doi = [],
+    } = req.body;
+
+    if (!googleId || !name || !email || !githubLink) {
+      return res.status(400).json({ error: "Required fields are missing" });
     }
-    const {name,email,skills,doi,githubLink,bio} = req.body;
-    if(!name || !email || !skills || !doi || !githubLink || !bio){
-      return res.status(400).json({error:"All fields are required"});
+
+    let username = generateUsername(name);
+    let count = 1;
+    while (await Profile.findOne({ username })) {
+      username = generateUsername(name) + count++;
     }
+
     const newProfile = await Profile.create({
       googleId,
       name,
+      username,
       email,
       skills,
       doi,
       githubLink,
-      bio,  
+      bio,
     });
-    res.status(201).json(newProfile);
-  }
-  catch(error){
-    console.error("Error adding profile:", error);
-c  }
-}
 
-//update profile by googleId
+    res.status(201).json(newProfile);
+  } catch (error) {
+    console.error("Error adding profile:", error);
+  }
+};
+
+// Update profile
 const updateProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
+    }
+
+    // Prevent changing username
+    if (req.body.username) {
+      return res.status(400).json({ error: "Username cannot be changed" });
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
-      { googleId },
+      { username },
       { $set: req.body },
       { new: true, runValidators: true }
     );
@@ -70,15 +106,15 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// Delete profile by googleId
+// Delete profile
 const deleteProfile = async (req, res) => {
   try {
-    const { googleId } = req.params;
-    if (!googleId) {
-      return res.status(400).json({ error: "Google ID is required" });
+    const { username } = req.params;
+    if (!username) {
+      return res.status(400).json({ error: "Username is required" });
     }
 
-    const deletedProfile = await Profile.findOneAndDelete({ googleId });
+    const deletedProfile = await Profile.findOneAndDelete({ username });
     if (!deletedProfile) {
       return res.status(404).json({ error: "Profile not found" });
     }
@@ -90,6 +126,7 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+// Search profiles
 const searchProfile = async (req, res) => {
   try {
     const { query } = req.query;
@@ -99,9 +136,10 @@ const searchProfile = async (req, res) => {
 
     const profiles = await Profile.find({
       $or: [
+        { username: { $regex: query, $options: "i" } },
         { name: { $regex: query, $options: "i" } },
-        { skills: { $regex: query, $options: "i" } },
         { email: { $regex: query, $options: "i" } },
+        { skills: { $elemMatch: { $regex: query, $options: "i" } } }, // Case-insensitive skill search
       ],
     });
 
@@ -112,4 +150,11 @@ const searchProfile = async (req, res) => {
   }
 };
 
-module.exports = { getProfile, addProfile, updateProfile, deleteProfile, searchProfile };
+module.exports = {
+  getProfile,
+  getProfiles,
+  addProfile,
+  updateProfile,
+  deleteProfile,
+  searchProfile,
+};
