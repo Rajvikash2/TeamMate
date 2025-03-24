@@ -20,31 +20,44 @@ const getProfile = async (req, res) => {
   }
 };
 
+const getProfiles = async (req, res) => {
+  try {
+    const profiles = await Profile.find({}, "username name");
+
+    if (!profiles || profiles.length === 0) {
+      return res
+        .status(200)
+        .json({ message: "No profiles found", profiles: [] });
+    }
+
+    res.status(200).json({ profiles });
+  } catch (error) {
+    console.error("Error fetching profiles:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 // Add a profile
 const addProfile = async (req, res) => {
   try {
-    const { googleId, name, email, skills, doi, githubLink, bio } = req.body;
+    const {
+      googleId,
+      name,
+      email,
+      githubLink,
+      bio = "",
+      skills = [],
+      doi = [],
+    } = req.body;
 
-    if (
-      !googleId ||
-      !name ||
-      !email ||
-      !skills ||
-      !doi ||
-      !githubLink ||
-      !bio
-    ) {
-      return res.status(400).json({ error: "All fields are required" });
+    if (!googleId || !name || !email || !githubLink) {
+      return res.status(400).json({ error: "Required fields are missing" });
     }
 
-    // Generate unique username
     let username = generateUsername(name);
-    let usernameExists = await Profile.findOne({ username });
-
-    // Ensure username uniqueness
-    while (usernameExists) {
-      username = generateUsername(name);
-      usernameExists = await Profile.findOne({ username });
+    let count = 1;
+    while (await Profile.findOne({ username })) {
+      username = generateUsername(name) + count++;
     }
 
     const newProfile = await Profile.create({
@@ -65,11 +78,17 @@ const addProfile = async (req, res) => {
   }
 };
 
+// Update profile
 const updateProfile = async (req, res) => {
   try {
     const { username } = req.params;
     if (!username) {
       return res.status(400).json({ error: "Username is required" });
+    }
+
+    // Prevent changing username
+    if (req.body.username) {
+      return res.status(400).json({ error: "Username cannot be changed" });
     }
 
     const updatedProfile = await Profile.findOneAndUpdate(
@@ -88,6 +107,7 @@ const updateProfile = async (req, res) => {
   }
 };
 
+// Delete profile
 const deleteProfile = async (req, res) => {
   try {
     const { username } = req.params;
@@ -107,6 +127,7 @@ const deleteProfile = async (req, res) => {
   }
 };
 
+// Search profiles
 const searchProfile = async (req, res) => {
   try {
     const { query } = req.query;
@@ -119,7 +140,7 @@ const searchProfile = async (req, res) => {
         { username: { $regex: query, $options: "i" } },
         { name: { $regex: query, $options: "i" } },
         { email: { $regex: query, $options: "i" } },
-        { skills: { $in: [query] } },
+        { skills: { $elemMatch: { $regex: query, $options: "i" } } }, // Case-insensitive skill search
       ],
     });
 
@@ -132,6 +153,7 @@ const searchProfile = async (req, res) => {
 
 module.exports = {
   getProfile,
+  getProfiles,
   addProfile,
   updateProfile,
   deleteProfile,
