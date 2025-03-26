@@ -114,7 +114,7 @@ export default function Aurora(props) {
   const {
     colorStops = ["#00d8ff", "#7cff67", "#00d8ff"],
     amplitude = 1.0,
-    blend = 0.5
+    blend = 0.5,
   } = props;
   const propsRef = useRef(props);
   propsRef.current = props;
@@ -128,13 +128,13 @@ export default function Aurora(props) {
     const renderer = new Renderer({
       alpha: true,
       premultipliedAlpha: true,
-      antialias: true
+      antialias: true,
     });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-    gl.canvas.style.backgroundColor = 'transparent';
+    gl.canvas.style.backgroundColor = "transparent";
 
     let program;
 
@@ -167,8 +167,8 @@ export default function Aurora(props) {
         uAmplitude: { value: amplitude },
         uColorStops: { value: colorStopsArray },
         uResolution: { value: [ctn.offsetWidth, ctn.offsetHeight] },
-        uBlend: { value: blend }
-      }
+        uBlend: { value: blend },
+      },
     });
 
     const mesh = new Mesh(gl, { geometry, program });
