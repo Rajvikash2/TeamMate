@@ -16,7 +16,7 @@ const CardShow = () => {
 
         setPosts(data);
       } catch (error) {
-        console.error("Error fetching posts:", errror);
+        console.error("Error fetching posts:", error);
       }
     };
 
@@ -33,10 +33,8 @@ const CardShow = () => {
         <SearchIcon className="absolute right-2" />
       </div>
       <Grid columns="3" gap="3">
-   
-        {posts.map((post,index) => (
-          <PostCard key={index} post={post} />
-        ))}
+        {posts.length > 0 &&
+          posts.map((post, index) => <PostCard key={index} post={post} />)}
       </Grid>
     </div>
   );
