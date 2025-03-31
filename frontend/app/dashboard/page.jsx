@@ -9,18 +9,18 @@ const Dashboard = () => {
 
     useEffect(() => {
         if (status === "unauthenticated") {
-            router.push("/signin"); // Redirect to the sign-in page
+            router.push("/signin");
         }
     }, [status, router]);
 
     if (status === "loading") return <p>Loading...</p>;
 
-    if (!session) return null; // Prevent rendering if no session
+    if (!session) return null; 
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
             <h1 className="text-2xl">Welcome, {session.user.name}!</h1>
-            <p className="text-lg">Your Google ID: {session.user.id}</p>
+            <p className="text-lg">Your Google ID: {session.user.googleId}</p>
         </div>
     );
 };
