@@ -1,7 +1,7 @@
 "use client";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const SignInPage = () => {
   const { data: session, status } = useSession();
@@ -13,17 +13,23 @@ const SignInPage = () => {
     }
   }, [status, router]);
 
-
   handleSignIn = async () => {
-
     const res = await signIn("google", { redirect: "/" });
     if (res?.error) {
       console.error("Error signing in:", res.error);
     } else {
       console.log("Sign-in successful!");
-      fetch("/api/")
+      fetch(`/api/profile/getProfile/${session.user.email}`, {
+        method: "GET",
+      })
+        .then((res) => res.json())
+        .catch((err) => {
+          if (err.message === "Profile not found") {
+            redirect("/profile/createProfile");
+          }
+        });
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
