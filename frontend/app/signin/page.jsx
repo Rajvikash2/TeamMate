@@ -11,6 +11,18 @@ const SignInPage = () => {
     }
   }, [session]);
 
+
+  handleSignIn = async () => {
+
+    const res = await signIn("google", { redirect: "/" });
+    if (res?.error) {
+      console.error("Error signing in:", res.error);
+    } else {
+      console.log("Sign-in successful!");
+      fetch("/api/")
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       {session ? (
