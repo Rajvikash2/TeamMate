@@ -59,8 +59,8 @@ const Navbar = () => {
                 <span className="sr-only">Open user menu</span>
                 <Image
                   className="w-8 h-8 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
-                  alt="user photo"
+                  src={session.user.image} // ✅ Use Google profile picture
+                  alt="User photo"
                   width={32}
                   height={32}
                 />
@@ -131,9 +131,8 @@ const Navbar = () => {
         </div>
 
         <div
-          className={`items-center justify-between ${
-            isMobileMenuOpen ? "block" : "hidden"
-          } w-full md:flex md:w-auto md:order-1`}
+          className={`items-center justify-between ${isMobileMenuOpen ? "block" : "hidden"
+            } w-full md:flex md:w-auto md:order-1`}
           id="navbar-user"
         >
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
