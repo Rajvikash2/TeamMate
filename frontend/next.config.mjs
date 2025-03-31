@@ -8,7 +8,7 @@ const nextConfig = {
       },
       {
         source: "/api/profile",
-        destination: "http://localhost:4000/post/",
+        destination: "http://localhost:4000/profile/",
       },
     ];
   },

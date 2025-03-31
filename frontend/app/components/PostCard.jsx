@@ -33,7 +33,7 @@ const PostCard = ({ post }) => {
             </h3>
             {/* <h3>rolereq</h3> */}
             <ul>
-              <li>RoleReq</li>
+              <li>Role</li>
               {post.roleReq.map((role, index) => (
                 <li key={index}>{role}</li>
               ))}

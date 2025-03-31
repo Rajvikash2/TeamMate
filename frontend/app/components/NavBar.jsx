@@ -62,8 +62,8 @@ const Navbar = () => {
                 <span className="sr-only">Open user menu</span>
                 <Image
                   className="w-8 h-8 rounded-full"
-                  src="/docs/images/people/profile-picture-3.jpg"
-                  alt="user photo"
+                  src={session.user.image} // ✅ Use Google profile picture
+                  alt="User photo"
                   width={32}
                   height={32}
                 />
