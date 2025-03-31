@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import PostCard from './PostCard'
 import { useSession } from 'next-auth/react'
+import { CircleOff } from 'lucide-react'
 
 const MyProjects = () => {
      const [posts, setPosts] = useState([]);
@@ -33,7 +34,8 @@ const MyProjects = () => {
   posts.map((post, index) => <PostCard key={index} post={post} />)
 ) : (
   <div className='flex flex-col items-center justify-center '>
-   
+   <CircleOff className='w-20 h-20 '/>
+    <h1 className='text-4xl'>No Projects Found</h1>
   </div>
 )}
         </Grid>
