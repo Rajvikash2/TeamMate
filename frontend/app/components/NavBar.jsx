@@ -11,13 +11,11 @@ const Navbar = () => {
 
   const MenuList = [
     { name: "Home", url: "/" },
-    { name: "About", url: "/post" },
-    { name: "Services", url: "#" },
-    { name: "Pricing", url: "#" },
-    { name: "Contact", url: "#" },
+    { name: "About", url: "/about" },
+
   ];
   const profileList = [
-    { name: "Profile", url: "#" },
+    { name: "Profile", url: "/profile" },
     { name: "Settings", url: "#" },
     { name: "Sign out", url: "/api/auth/signout" },
   ];
