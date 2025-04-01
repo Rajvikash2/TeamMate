@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 export default function ProfileStepper({ setError }) {
   const { data: session } = useSession();
   const [profile, setProfile] = useState({
-    googleId: session?.user?.googleId || "",
+    googleId: session?.user?.googleId,
     name: "",
     email: "",
     skills: [],
@@ -29,15 +29,16 @@ export default function ProfileStepper({ setError }) {
     console.log(profile);
     console.log("Google ID:", session.user.googleId);
     try {
-      const response = await fetch("/profile/", {
+      const response = await fetch("/api/profile/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(profile),
       });
+      console.log(response);
 
-      if (response.ok) {
+      if (response) {
         setError(false);
         alert("Profile submitted successfully!");
       } else {

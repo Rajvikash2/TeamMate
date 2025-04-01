@@ -19,12 +19,8 @@ const nextConfig = {
         destination: "http://localhost:4000/post/:path*",
       },
       {
-        source: "/profile/:path*",
+        source: "/api/profile/:path*",
         destination: "http://localhost:4000/profile/:path*",
-      },
-      {
-        source: "/profile/",
-        destination: "http://localhost:4000/profile/",
       },
     ];
   },
