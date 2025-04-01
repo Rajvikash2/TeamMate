@@ -1,7 +1,7 @@
 const Post = require("../model/postModel");
 const multer = require("multer");
-
 const { uploadFileToS3 } = require("../utils/helper");
+
 const getPosts = async (req, res) => {
   const posts = await Post.find();
   if (!posts) {
@@ -57,10 +57,14 @@ const createPost = async (req, res) => {
     const { title, roleReq, desc, jobType, domain } = req.body;
 
     // const image = await uploadFileToS3(file);
+    const image = "";
+
+    // console.log(req.body);
 
     if (!title || !roleReq || !desc || !jobType || !domain) {
       return res.status(400).json({ error: "All fields are required" });
     }
+
     const post = new Post({
       ownerGoogleId,
       title,
