@@ -25,10 +25,10 @@ const profileSchema = new Schema(
       type: [String],
       default: [],
     },
-    doi: {
-      type: [String],
-      default: [],
-    },
+    // doi: {
+    //   type: [String],
+    //   default: [],
+    // },
     githubLink: {
       type: String,
       required: true,

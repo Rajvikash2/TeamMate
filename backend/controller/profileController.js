@@ -47,13 +47,13 @@ const addProfile = async (req, res) => {
       githubLink,
       bio = "",
       skills = [],
-      doi = [],
+      // doi = [],
     } = req.body;
 
     if (!googleId || !name || !email || !githubLink) {
       return res.status(400).json({ error: "Required fields are missing" });
     }
-
+    console.log("Adding profile:", req.body);
     let username = generateUsername(name);
     let count = 1;
     while (await Profile.findOne({ username })) {
@@ -66,10 +66,10 @@ const addProfile = async (req, res) => {
       username,
       email,
       skills,
-      doi,
       githubLink,
       bio,
     });
+    console.log("New profile created:", newProfile);
 
     res.status(201).json(newProfile);
   } catch (error) {
