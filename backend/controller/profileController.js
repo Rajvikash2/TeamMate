@@ -54,6 +54,14 @@ const addProfile = async (req, res) => {
       return res.status(400).json({ error: "Required fields are missing" });
     }
     console.log("Adding profile:", req.body);
+
+    const existingProfile = await Profile.findOne({ email });
+    if (existingProfile) {
+      return res
+        .status(400)
+        .json({ error: "Profile with this email already exists" });
+    }
+
     let username = generateUsername(name);
     let count = 1;
     while (await Profile.findOne({ username })) {
@@ -70,7 +78,6 @@ const addProfile = async (req, res) => {
       bio,
     });
     console.log("New profile created:", newProfile);
-
     res.status(201).json(newProfile);
   } catch (error) {
     console.error("Error adding profile:", error);

@@ -8,7 +8,7 @@ export default function ProfileStepper({ setError }) {
   const [profile, setProfile] = useState({
     googleId: session?.user?.googleId,
     name: "",
-    email: "",
+    email: session?.user?.email,
     skills: [],
     githubLink: "",
     bio: "",
@@ -28,6 +28,8 @@ export default function ProfileStepper({ setError }) {
   const handleFinalSubmit = async () => {
     console.log(profile);
     console.log("Google ID:", session.user.googleId);
+    console.log("Email:", session.user.email);
+    console.log("Profile:", profile);
     try {
       const response = await fetch("/api/profile/", {
         method: "POST",
@@ -69,7 +71,7 @@ export default function ProfileStepper({ setError }) {
             className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
           />
 
-          <input
+          {/* <input
             type="email"
             name="email"
             value={profile.email}
@@ -77,7 +79,7 @@ export default function ProfileStepper({ setError }) {
             placeholder="Email"
             required
             className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
-          />
+          /> */}
         </div>
       </Step>
       <Step>
