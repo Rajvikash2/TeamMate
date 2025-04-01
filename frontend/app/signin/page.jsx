@@ -12,25 +12,7 @@ const SignInPage = () => {
       router.push("/");
     }
   }, [status, router]);
-
-  handleSignIn = async () => {
-    const res = await signIn("google", { redirect: "/" });
-    if (res?.error) {
-      console.error("Error signing in:", res.error);
-    } else {
-      console.log("Sign-in successful!");
-      fetch(`/api/profile/getProfile/${session.user.email}`, {
-        method: "GET",
-      })
-        .then((res) => res.json())
-        .catch((err) => {
-          if (err.message === "Profile not found") {
-            redirect("/profile/createProfile");
-          }
-        });
-    }
-  };
-
+  
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       {session ? (

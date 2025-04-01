@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-
   images: {
     remotePatterns: [
       {
@@ -9,20 +8,21 @@ const nextConfig = {
       },
     ],
   },
-
   async rewrites() {
-    
     return [
       {
         source: "/api/post",
         destination: "http://localhost:4000/post/",
       },
       {
-        source: "/api/profile",
-        destination: "http://localhost:4000/profile/",
-      },
+        source: "/post/:path*",
+        destination: "http://localhost:4000/post/:path*",
+      }
+      ,{
+        source: "/profile/:path*",
+        destination: "http://localhost:4000/profile/:path*",
+      }
     ];
   },
 };
-
 export default nextConfig;
