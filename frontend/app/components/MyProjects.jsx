@@ -4,12 +4,16 @@ import React, { useEffect, useState } from "react";
 import PostCard from "./PostCard";
 import { useSession } from "next-auth/react";
 import { CircleOff, Loader2 } from "lucide-react";
+import ProjectPost from "./ProjectPost";
+import { ToastContainer, toast } from "react-toastify";
 
 const MyProjects = () => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const { data: session } = useSession();
+  const [isDialogOpen, setDialogOpen] = useState(false);
+  const [postKey, setPostKey] = useState(0);
 
   // Ensure session is available before accessing user ID
   const ownerGoogleId = session?.user?.googleId ?? null;
@@ -37,7 +41,12 @@ const MyProjects = () => {
     };
 
     fetchPosts();
-  }, [ownerGoogleId]);
+  }, [ownerGoogleId, postKey]); // Added postKey to dependencies
+
+  const handlePostSubmit = (data) => {
+    // console.log("Post Data:", data);
+    setDialogOpen(false);
+  };
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
@@ -85,12 +94,20 @@ const MyProjects = () => {
           </p>
           <button
             className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors shadow-sm"
-            onClick={() => (window.location.href = "/create-project")} // Adjust this to your create project route
+            // onClick={() => (window.location.href = "/create-project")} // Adjust this to your create project route
+            onClick={() => setDialogOpen(true)}
           >
             Create New Project
           </button>
+          <ProjectPost
+            isOpen={isDialogOpen}
+            onClose={() => setDialogOpen(false)}
+            setPostKey={setPostKey}
+            // onSubmit={handlePostSubmit}
+          />
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
