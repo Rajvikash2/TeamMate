@@ -22,6 +22,10 @@ const nextConfig = {
         source: "/profile/:path*",
         destination: "http://localhost:4000/profile/:path*",
       },
+      {
+        source: "/profile/",
+        destination: "http://localhost:4000/profile/",
+      },
     ];
   },
 };

@@ -29,7 +29,7 @@ export default function ProfileStepper({ setError }) {
     console.log(profile);
     console.log("Google ID:", session.user.googleId);
     try {
-      const response = await fetch("/profile", {
+      const response = await fetch("/profile/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
