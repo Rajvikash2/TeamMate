@@ -13,9 +13,16 @@ const Dashboard = () => {
         }
     }, [status, router]);
 
-    if (status === "loading") return <p>Loading...</p>;
+    if (status === "loading") {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <div className="w-40 h-6 bg-gray-300 rounded animate-pulse mb-2"></div>
+                <div className="w-60 h-4 bg-gray-300 rounded animate-pulse"></div>
+            </div>
+        );
+    }
 
-    if (!session) return null; 
+    if (!session) return null;
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
