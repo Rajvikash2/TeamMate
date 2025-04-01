@@ -3,10 +3,10 @@ const { getProfile, getProfiles ,addProfile, updateProfile, deleteProfile, searc
 const router = express.Router();
 
 router.get("/users", getProfiles);
-router.get("/:username", getProfile);
+router.get("/:googleId", getProfile);
 router.post("/", addProfile);
-router.put("/:username", updateProfile); 
-router.delete("/:username", deleteProfile);
+router.put("/:googleId", updateProfile); 
+router.delete("/:googleId", deleteProfile);
 router.get("/", searchProfile); 
 
 module.exports = router;
