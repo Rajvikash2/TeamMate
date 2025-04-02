@@ -10,6 +10,7 @@ const nextConfig = {
   },
   async rewrites() {
     return [
+      //
       {
         source: "/api/post",
         destination: "http://localhost:4000/post/",
@@ -21,6 +22,10 @@ const nextConfig = {
       {
         source: "/api/profile/:path*",
         destination: "http://localhost:4000/profile/:path*",
+      },
+      {
+        source: "/post/create/:path*",
+        destination: "http://localhost:4000/post/create/:path*",
       },
     ];
   },
