@@ -1,111 +1,118 @@
-"use client";
-import * as React from "react";
-import * as Dialog from "@radix-ui/react-dialog";
-import { Cross2Icon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { ToastContainer, toast } from "react-toastify";
+"use client"
+import * as Dialog from "@radix-ui/react-dialog"
+import { Cross2Icon } from "@radix-ui/react-icons"
+import { useState } from "react"
+import { useSession } from "next-auth/react"
+import { toast } from "react-toastify"
+import { Image, Upload } from "lucide-react"
+
 const ProjectPost = ({ isOpen, onClose, setPostKey }) => {
-  const { data: session } = useSession();
+  const { data: session } = useSession()
   const [formData, setFormData] = useState({
     title: "",
     roleReq: "",
     desc: "",
     jobType: "Unpaid",
-    image: null, // Image will be handled as a file
+    image: null,
     domain: "",
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files } = e.target
 
     // If the field is a file input, update the image file
     if (name === "image") {
-      setFormData({ ...formData, image: files[0] });
+      setFormData({ ...formData, image: files[0] })
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData({ ...formData, [name]: value })
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
-    console.log("Form Data:", formData); // Debugging line to check form data
-    const res = await fetch(`/post/create/${session.user.googleId}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
+    e.preventDefault()
 
-    e.preventDefault();
-    // onSubmit(formData);
-    onClose();
-    console.log(res);
-    if (res.ok) {
-      setPostKey((prev) => prev + 1);
-      toast("Succesfull");
-    } else {
-      toast("Failed to post project");
+    try {
+      const res = await fetch(`/post/create/${session.user.googleId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (res.ok) {
+        setPostKey((prev) => prev + 1)
+        toast.success("Project posted successfully!")
+        onClose()
+      } else {
+        toast.error("Failed to post project")
+      }
+    } catch (error) {
+      console.error("Error posting project:", error)
+      toast.error("An error occurred while posting your project")
     }
-  };
+  }
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         {/* Background Overlay */}
-        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-90" />
+        <Dialog.Overlay className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm" />
 
         {/* Dialog Content */}
-        <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[80vh] w-[95vw] max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-gray-900 p-6 shadow-xl focus:outline-none overflow-hidden">
+        <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[90vh] w-[95vw] max-w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-lg bg-white p-6 shadow-xl focus:outline-none overflow-hidden">
           <div className="overflow-y-auto max-h-[75vh] p-2">
-            <Dialog.Title className="text-2xl font-semibold text-white">
-              Create New Project
-            </Dialog.Title>
-            <Dialog.Description className="mb-5 mt-2 text-lg text-gray-300">
-              Fill in the details to create your project. Click "Post" when
-              you're ready.
+            <Dialog.Title className="text-2xl font-semibold text-gray-900">Create a Project</Dialog.Title>
+            <Dialog.Description className="mb-5 mt-2 text-sm text-gray-500">
+              Share your project idea with the community and find collaborators.
             </Dialog.Description>
 
-            {/* Form - Single Column Layout */}
+            {/* Form */}
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Title</label>
+              <fieldset className="flex flex-col gap-2 ">
+                <label className="text-sm font-medium text-gray-700">Title</label>
                 <input
                   type="text"
                   name="title"
                   value={formData.title}
                   onChange={handleChange}
                   required
-                  className="h-[40px] w-full rounded-md bg-gray-800 px-3 text-white shadow-md outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Give your project a clear title"
+                  className="h-[40px] w-full rounded-md border bg-white border-gray-300 px-3 text-gray-900 shadow-sm outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </fieldset>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <fieldset className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-gray-700">Role(s)</label>
+                  <input
+                    type="text"
+                    name="roleReq"
+                    value={formData.roleReq}
+                    onChange={handleChange}
+                    required
+                    placeholder="Developer, Designer, etc."
+                    className="h-[40px] w-full rounded-md border bg-white border-gray-300 px-3 text-gray-900 shadow-sm outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </fieldset>
+
+                <fieldset className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-gray-700">Job Type</label>
+                  <select
+                    name="jobType"
+                    value={formData.jobType}
+                    onChange={handleChange}
+                    required
+                    className="h-[40px] w-full rounded-md border bg-white border-gray-300 px-3 text-gray-900 shadow-sm outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="Paid">Paid</option>
+                    <option value="Unpaid">Unpaid</option>
+                  </select>
+                </fieldset>
+              </div>
+
               <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Role(s)</label>
-                <input
-                  type="text"
-                  name="roleReq"
-                  value={formData.roleReq}
-                  onChange={handleChange}
-                  required
-                  placeholder="Developer, Designer, etc."
-                  className="h-[40px] w-full rounded-md bg-gray-800 px-3 text-white shadow-md outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </fieldset>
-              <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Job Type</label>
-                <select
-                  name="jobType"
-                  value={formData.jobType}
-                  onChange={handleChange}
-                  required
-                  className="h-[40px] w-full rounded-md bg-gray-800 px-3 text-white shadow-md outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="Paid">Paid</option>
-                  <option value="Unpaid">Unpaid</option>
-                </select>
-              </fieldset>
-              <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Domain</label>
+                <label className="text-sm font-medium text-gray-700">Domain</label>
                 <input
                   type="text"
                   name="domain"
@@ -113,33 +120,35 @@ const ProjectPost = ({ isOpen, onClose, setPostKey }) => {
                   onChange={handleChange}
                   required
                   placeholder="e.g., Web Development"
-                  className="h-[40px] w-full rounded-md bg-gray-800 px-3 text-white shadow-md outline-none focus:ring-2 focus:ring-blue-500"
+                  className="h-[40px] w-full rounded-md border bg-white border-gray-300 px-3 text-gray-900 shadow-sm outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </fieldset>
+
               {/* Description Field */}
               <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Description</label>
+                <label className="text-sm font-medium text-gray-700">Description</label>
                 <textarea
                   name="desc"
                   value={formData.desc}
                   onChange={handleChange}
                   maxLength="500"
-                  placeholder="Brief project description"
-                  className="h-[120px] w-full resize-none rounded-md bg-gray-800 px-3 py-2 text-white shadow-md outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Describe your project, goals, and what you're looking for in collaborators"
+                  className="h-[120px] w-full resize-none rounded-md border bg-white border-gray-300 px-3 py-2 text-gray-900 shadow-sm outline-none focus:ring-2 focus:ring-orange-500"
                 />
+                <div className="text-xs text-gray-500 text-right">{formData.desc.length}/500</div>
               </fieldset>
-              {/* Image Upload Field (Only Upload Button) */}
 
+              {/* Image Upload Field */}
               <fieldset className="flex flex-col gap-2">
-                <label className="text-gray-300">Upload Image</label>
-
-                <button
-                  type="button"
+                <label className="text-sm font-medium text-gray-700">Upload Image</label>
+                <div
+                  className="border border-dashed border-gray-300 rounded-md p-4 text-center hover:bg-gray-50 transition cursor-pointer"
                   onClick={() => document.getElementById("fileInput").click()}
-                  className="px-5 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition"
                 >
-                  Upload Image
-                </button>
+                  <Upload className="w-6 h-6 mx-auto text-gray-400 mb-2" />
+                  <p className="text-sm text-gray-500">Click to upload an image</p>
+                  <p className="text-xs text-gray-400 mt-1">PNG, JPG, GIF up to 5MB</p>
+                </div>
 
                 {/* Hidden File Input */}
                 <input
@@ -151,28 +160,30 @@ const ProjectPost = ({ isOpen, onClose, setPostKey }) => {
                   className="hidden"
                 />
 
-                {/* Show Selected File Name + Remove Icon in Corner */}
+                {/* Show Selected File Name */}
                 {formData.image && (
-                  <div className="relative mt-2 p-2 bg-gray-800 rounded-md flex items-center justify-between text-gray-300">
-                    <p className="text-sm">{formData.image.name}</p>
-
-                    {/* Remove Icon (Top-right corner) */}
+                  <div className="mt-2 p-2 bg-gray-50 rounded-md flex items-center justify-between text-gray-700 border border-gray-200">
+                    <div className="flex items-center">
+                      <Image className="w-4 h-4 mr-2 text-gray-500" />
+                      <p className="text-sm truncate">{formData.image.name}</p>
+                    </div>
                     <button
                       type="button"
                       onClick={() => setFormData({ ...formData, image: null })}
-                      className="absolute right-2 top-2 text-gray-400 hover:text-red-500 transition"
+                      className="text-gray-400 hover:text-red-500 transition"
                     >
-                      <Cross2Icon />
+                      <Cross2Icon className="w-4 h-4" />
                     </button>
                   </div>
                 )}
               </fieldset>
+
               {/* Buttons */}
               <div className="flex justify-end gap-3 mt-4">
                 <Dialog.Close asChild>
                   <button
                     type="button"
-                    className="px-5 py-2 rounded-md bg-gray-700 text-white hover:bg-gray-600 transition"
+                    className="px-4 py-2 rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
                   >
                     Cancel
                   </button>
@@ -180,7 +191,7 @@ const ProjectPost = ({ isOpen, onClose, setPostKey }) => {
 
                 <button
                   type="submit"
-                  className="px-5 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 transition"
+                  className="px-4 py-2 rounded-md bg-orange-500 text-white hover:bg-orange-600 transition"
                 >
                   Post Project
                 </button>
@@ -189,19 +200,12 @@ const ProjectPost = ({ isOpen, onClose, setPostKey }) => {
           </div>
 
           {/* Close Button */}
-          {/* Close Button (Moved Outside Top-Right) */}
-          <Dialog.Close asChild>
-            <button
-              className="absolute right-[-40px] top-[-40px] size-[40px] flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-red-500 transition shadow-lg"
-              aria-label="Close"
-            >
-              <Cross2Icon className="w-5 h-5 text-white" />
-            </button>
-          </Dialog.Close>
+          
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
-  );
-};
+  )
+}
 
-export default ProjectPost;
+export default ProjectPost
+

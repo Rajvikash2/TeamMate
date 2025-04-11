@@ -1,13 +1,46 @@
 const Post = require("../model/postModel");
+const Profile = require("../model/profileModel");
 const multer = require("multer");
 const { uploadFileToS3 } = require("../utils/helper");
 
+const getDetails = async (googleId) => {
+  if (!googleId) return null;
+
+  const profile = await Profile.findOne({ googleId });
+  console.log("Profile details: =>", profile);
+  return profile || null;
+};
+
 const getPosts = async (req, res) => {
-  const posts = await Post.find();
-  if (!posts) {
-    return res.status(404).json({ error: "No Posts found" });
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+
+    if (!posts || posts.length === 0) {
+      return res.status(200).json([]);
+    }
+    console.log("Posts: =>", posts);
+
+    const profiles = await Profile.find();
+
+    const enrichedPosts = posts.map((post) => {
+      const matchingProfile = profiles.find(
+        (profile) => profile.googleId === post.ownerGoogleId
+      );
+
+      const postObject = post.toObject();
+      if (matchingProfile) {
+        postObject.name = matchingProfile.name; 
+      }
+      return postObject;
+    });
+
+    // console.log("Enriched Posts: =>", enrichedPosts);
+
+    res.status(200).json(enrichedPosts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ error: "Server error" });
   }
-  res.status(200).json(posts);
 };
 
 const getPostByOwnerId = async (req, res) => {

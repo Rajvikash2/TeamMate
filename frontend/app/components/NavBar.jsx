@@ -1,148 +1,171 @@
-"use client";
-import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { useSession } from "next-auth/react";
+"use client"
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { useSession } from "next-auth/react"
+import { Bell, Home, Info, Menu, MessageSquare, Search, X } from "lucide-react"
+import { usePathname } from "next/navigation"
+
 
 const Navbar = () => {
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { data: session, status } = useSession();
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
+  const { data: session, status } = useSession()
+  const pathname = usePathname()
+
 
   const MenuList = [
-    { name: "Home", url: "/" },
-    { name: "About", url: "/about" },
-  ];
+    { name: "Home", url: "/", icon: <Home size={20} /> },
+    { name: "About", url: "/about", icon: <Info size={20} /> },
+  ]
+
   const profileList = [
     { name: "Profile", url: "/profile" },
     { name: "Settings", url: "#" },
     { name: "Sign out", url: "/api/auth/signout" },
-  ];
+  ]
 
   const toggleUserDropdown = () => {
-    setIsUserDropdownOpen((prev) => !prev);
-  };
+    setIsUserDropdownOpen((prev) => !prev)
+  }
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen((prev) => !prev);
-  };
+    setIsMobileMenuOpen((prev) => !prev)
+  }
 
   return (
-    <nav className="bg-black fixed w-full z-10 top-0 left-0">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <Link href="/" className="flex items-center space-x-3">
-          <Image
-            src="https://flowbite.com/docs/images/logo.svg"
-            className="h-8"
-            alt="Flowbite Logo"
-            width={32}
-            height={32}
-          />
-          <span className="poppins-head self-center text-2xl font-semibold whitespace-nowrap text-white">
-            Collab <span className="text-[#3abcf0]">Connect</span>
-          </span>
-        </Link>
+    <nav className="bg-white border-b border-gray-200 fixed w-full z-10 top-0 left-0 shadow-sm">
+      <div className="max-w-screen-xl flex items-center justify-between mx-auto p-2">
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center space-x-2 mr-4">
+            <div className="bg-orange-500 rounded-full w-8 h-8 flex items-center justify-center">
+              <MessageSquare className="h-5 w-5 text-white" />
+            </div>
+            <span className="font-semibold text-xl hidden sm:block text-gray-600">
+              Collab<span className="text-orange-500">Connect</span>
+            </span>
+          </Link>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex md:space-x-8">
-          {MenuList.map((item, ind) => (
-            <Link key={ind} href={item.url} className="text-white hover:text-blue-500">
-              {item.name}
-            </Link>
-          ))}
+          <button type="button" className="md:hidden p-2 text-gray-500" onClick={toggleMobileMenu}>
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
 
-        <div className="flex items-center md:order-2 space-x-3 relative">
-          {status === "loading" ? (
-            <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse"></div>
-          ) : session ? (
-            <>
-              <button
-                type="button"
-                className="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                onClick={toggleUserDropdown}
-              >
-                <Image
-                  className="w-8 h-8 rounded-full"
-                  src={session.user.image}
-                  alt="User photo"
-                  width={32}
-                  height={32}
-                />
-              </button>
-              {isUserDropdownOpen && (
-                <div className="z-50 absolute top-full right-0 mt-2 w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
-                  <div className="px-4 py-3">
-                    <span className="block text-sm text-gray-900 dark:text-white">
-                      {session.user.name}
-                    </span>
-                    <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                      {session.user.email}
-                    </span>
-                  </div>
-                  <ul className="py-2">
-                    {profileList.map((item, ind) => (
-                      <li key={ind}>
-                        <Link
-                          href={item.url}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                        >
-                          {item.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </>
-          ) : status === "loading" ? (
-            <div className="w-20 h-8 bg-gray-300 animate-pulse rounded"></div>
-          ) : (
-            <Link
-              href="/signin"
-              className="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-4 py-2"
-            >
-              Sign In
-            </Link>
-          )}
+        {/* Search Bar */}
+        <div className={`relative flex-1 max-w-xl mx-4 `}>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <Search className="w-5 h-5 text-gray-400" />
+            </div>
+            <input
+              type="search"
+              className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:outline-none"
+              placeholder="Search CollabConnect"
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+            />
+          </div>
+        </div>
 
-          <button
-            type="button"
-            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-            onClick={toggleMobileMenu}
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
+        {/* Desktop Menu */}
+        <div className="hidden md:flex items-center space-x-4">
+          {MenuList.filter(item => item.url !== pathname).map((item, ind) => (
+            <Link
+              key={ind}
+              href={item.url}
+              className="flex items-center space-x-1 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
             >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
+              {item.icon}
+              <span>{item.name}</span>
+            </Link>
+          ))}
+
+          <button className="text-gray-700 hover:bg-gray-100 p-2 rounded-full">
+            <Bell size={20} />
           </button>
+
+          <div className="flex items-center relative">
+            {status === "loading" ? (
+              <div className="w-8 h-8 rounded-full bg-gray-300 animate-pulse"></div>
+            ) : session ? (
+              <>
+                <button
+                  type="button"
+                  className="flex items-center space-x-1 text-sm bg-gray-100 hover:bg-gray-200 rounded-full p-1 focus:ring-2 focus:ring-orange-300"
+                  onClick={toggleUserDropdown}
+                >
+                  <Image
+                    className="w-7 h-7 rounded-full"
+                    src={session.user.image || "/placeholder.svg"}
+                    alt="User photo"
+                    width={28}
+                    height={28}
+                  />
+                  <span className="hidden md:block pr-2 text-black">{session.user.name?.split(" ")[0]}</span>
+                </button>
+                {isUserDropdownOpen && (
+                  <div className="z-50 absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200">
+                    <div className="px-4 py-3 border-b border-gray-100">
+                      <span className="block text-sm font-medium text-black">{session.user.name}</span>
+                      <span className="block text-xs text-gray-500 truncate">{session.user.email}</span>
+                    </div>
+                    <ul className="py-2">
+                      {profileList.map((item, ind) => (
+                        <li key={ind}>
+                          <Link href={item.url} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            {item.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Link
+                href="/signin"
+                className="text-white bg-orange-500 hover:bg-orange-600 font-medium rounded-full text-sm px-4 py-2"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-black w-full p-4">
+        <div className="md:hidden bg-white w-full p-4 border-t border-gray-200">
           {MenuList.map((item, ind) => (
-            <Link key={ind} href={item.url} className="block py-2 text-white hover:text-blue-500">
-              {item.name}
+            <Link
+              key={ind}
+              href={item.url}
+              className="flex items-center space-x-2 py-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+            >
+              {item.icon}
+              <span>{item.name}</span>
             </Link>
           ))}
+
+          {status === "authenticated" && (
+            <div className="border-t border-gray-200 mt-2 pt-2">
+              {profileList.map((item, ind) => (
+                <Link
+                  key={ind}
+                  href={item.url}
+                  className="flex items-center py-2 text-gray-700 hover:bg-gray-100 p-2 rounded-md"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar
+
