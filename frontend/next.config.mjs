@@ -40,6 +40,18 @@ const nextConfig = {
         source: "/api/like/toggle/:postId/:googleId",
         destination: "http://localhost:4000/like/toggle/:postId/:googleId",
       },
+      {
+        source: "/api/application/pending/:path*",
+        destination: "http://localhost:4000/application/pending/:path*",
+      },
+      {
+        source: "/api/application/accepted/:path*",
+        destination: "http://localhost:4000/application/accepted/:path*",
+      },
+      {
+        source: "/api/application/rejected/:path*",
+        destination: "http://localhost:4000/application/rejected/:path*",
+      },
     ];
   },
 };

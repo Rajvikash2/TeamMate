@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <Theme appearance="dark">
+          <Theme>
             <NavBar />
             {children}
             <ToastContainer

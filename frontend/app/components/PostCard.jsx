@@ -16,7 +16,6 @@ import "react-toastify/dist/ReactToastify.css";
 
 const PostCard = ({ post }) => {
   const { data: session } = useSession();
-
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
@@ -168,12 +167,13 @@ const PostCard = ({ post }) => {
           <MessageSquare className="w-5 h-5" />
           <span className="text-xs">Comments</span>
         </button>
-        <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2">
+        {/* <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2">
           <Share2 className="w-5 h-5" />
-          <span className="text-xs">Share</span>
-        </button>
+          <span className="text-xs">View</span>
+        </button> */}
 
         {/* Apply Button */}
+
         <button
           className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2"
           onClick={handleApply}
