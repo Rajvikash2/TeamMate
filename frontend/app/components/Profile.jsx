@@ -4,6 +4,7 @@ import StepperUsage from "./StepperUsage"
 import { useSession } from "next-auth/react"
 import UserProfile from "./UserProfile"
 import { Loader2 } from "lucide-react"
+import MyProjects from "./MyProjects"
 
 export default function Profile() {
   const { data: session, status } = useSession()
@@ -78,7 +79,10 @@ export default function Profile() {
           <StepperUsage setError={setError} />
         </div>
       ) : profile ? (
+       <>
         <UserProfile profile={profile} />
+       
+       </>
       ) : (
         <div className="flex items-center justify-center h-[calc(100vh-64px)]">
           <p className="text-gray-600">No profile found.</p>
