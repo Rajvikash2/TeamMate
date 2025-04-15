@@ -57,9 +57,10 @@ export default function ProfileStepper({ setError }) {
       onFinalStepCompleted={handleFinalSubmit}
       backButtonText="Previous"
       nextButtonText="Next"
+      className="text-black"
     >
       <Step>
-        <h2 className="text-white text-lg font-semibold">Basic Information</h2>
+        <h2 className=" text-lg font-semibold">Basic Information</h2>
         <div className="flex flex-col items-center gap-4 w-full max-w-md">
           <input
             type="text"
@@ -68,8 +69,18 @@ export default function ProfileStepper({ setError }) {
             onChange={handleChange}
             placeholder="Name"
             required
-            className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
+            className="border border-gray-200 rounded-md p-2 w-full text-sm text-gray-900 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
           />
+
+          {/* <input
+            type="text"
+            name="name"
+            value={profile.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+            className=" border rounded-lg p-2 w-full"
+          /> */}
 
           {/* <input
             type="email"
@@ -78,14 +89,12 @@ export default function ProfileStepper({ setError }) {
             onChange={handleChange}
             placeholder="Email"
             required
-            className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
+            className=" border text-gray-700 rounded-lg p-2 w-full"
           /> */}
         </div>
       </Step>
       <Step>
-        <h2 className="text-white text-lg font-semibold">
-          Professional Details
-        </h2>
+        <h2 className=" text-lg font-semibold">Professional Details</h2>
         <div className="flex flex-col items-center gap-4 w-full max-w-md">
           <input
             type="text"
@@ -93,8 +102,9 @@ export default function ProfileStepper({ setError }) {
             value={profile.skills.join(", ")}
             onChange={(e) => handleArrayChange(e, "skills")}
             placeholder="Skills (comma-separated)"
-            className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
+            className="border border-gray-200 rounded-md p-2 w-full text-sm text-gray-900 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
           />
+
           <input
             type="url"
             name="githubLink"
@@ -102,23 +112,23 @@ export default function ProfileStepper({ setError }) {
             onChange={handleChange}
             placeholder="GitHub Profile Link"
             required
-            className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full"
+            className="border border-gray-200 rounded-md p-2 w-full text-sm text-gray-900 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
           />
         </div>
       </Step>
       <Step>
-        <h2 className="text-white text-lg font-semibold">Short Bio</h2>
+        <h2 className=" text-lg font-semibold">Short Bio</h2>
         <textarea
           name="bio"
           value={profile.bio}
           onChange={handleChange}
           placeholder="Tell us about yourself"
           maxLength={500}
-          className="bg-gray-800 text-white border border-gray-600 rounded-lg p-2 w-full h-24"
-        ></textarea>
+          className="border border-gray-200 rounded-md p-2 w-full h-24 text-sm text-gray-900 bg-white hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-500 transition"
+        />
       </Step>
       <Step>
-        <h2 className="text-white text-lg font-semibold">Review & Submit</h2>
+        <h2 className=" text-lg font-semibold">Review & Submit</h2>
         <p className="text-gray-400">
           Please check your details before submitting.
         </p>

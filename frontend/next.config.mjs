@@ -27,6 +27,10 @@ const nextConfig = {
         source: "/post/create/:path*",
         destination: "http://localhost:4000/post/create/:path*",
       },
+      {
+        source: "/api/application/create/:path*",
+        destination: "http://localhost:4000/application/create/:path*",
+      },
     ];
   },
 };
