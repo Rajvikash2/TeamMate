@@ -3,6 +3,8 @@ import "./globals.css";
 import AuthProvider from "./session-provider";
 import { Theme } from "@radix-ui/themes";
 import NavBar from "./components/NavBar";
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,6 +30,18 @@ export default function RootLayout({ children }) {
           <Theme appearance="dark">
             <NavBar />
             {children}
+            <ToastContainer
+              position="bottom-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </Theme>
         </AuthProvider>
       </body>
