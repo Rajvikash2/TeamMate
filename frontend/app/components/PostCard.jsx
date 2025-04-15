@@ -1,58 +1,52 @@
-import Link from "next/link";
-import {
-  ArrowBigUp,
-  ArrowBigDown,
-  MessageSquare,
-  Share2,
-  Bookmark,
-} from "lucide-react";
-import { useSession } from "next-auth/react";
+"use client"
+
+import Link from "next/link"
+import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, Send } from "lucide-react"
+import { useSession } from "next-auth/react"
+import { toast } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const PostCard = ({ post }) => {
-  // Format the domain as a tag
-  const { data: session } = useSession();
-  // const formatDomain = (domain) => {
-  //   return domain.toLowerCase().replace(/\s+/g, "");
-  // };
-  // const [formData, setFormData] = useState({
-  //   postId: "",
-  //   googleId: "",
-  //   status: "Pending",
-  // });
-  // const {}
-  const handleApply = async () => {
-    // console.log("apply :", post);
-    if (!session?.user?.googleId) {
-      alert("You must be logged in to apply.");
-      return;
-    }
+  const { data: session } = useSession()
 
-    // const updatedFormData = {
-    //   postId: post._id,
-    //   googleId: post.ownerGoogleId,
-    //   status: "Pending",
-    // };
-    // setFormData(updatedFormData);
+  const handleApply = async () => {
+    if (!session?.user?.googleId) {
+      window.location.href = "/signin"
+      return
+    }
 
     try {
-      const res = await fetch(
-        `/api/application/create/${post._id}/${session.user.googleId}`,
-        {
-          method: "POST",
-        }
-      );
+      const response = await fetch(`/api/application/create/${post._id || post.id}/${session.user.googleId}`, {
+        method: "POST",
+      })
 
-      if (res.ok) {
-        alert("Applied successfully!");
+      if (response.ok) {
+        toast.success("Applied successfully!", {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          theme: "light",
+        })
       } else {
-        const err = await res.json();
-        alert("Failed to apply: " + err.message);
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to apply")
       }
     } catch (error) {
-      console.error("Error applying:", error);
-      alert("Something went wrong.");
+      console.error("Error applying:", error)
+      toast.error(error.message || "Something went wrong.", {
+        position: "bottom-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "light",
+      })
     }
-  };
+  }
 
   return (
     <div className="bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden hover:border-gray-300 transition-all">
@@ -66,20 +60,15 @@ const PostCard = ({ post }) => {
       </div>
 
       {/* Card Content */}
-      <Link href={`/post/${post.id}`} className="block">
+      <Link href={`/post/${post.id || post._id}`} className="block">
         <div className="p-3">
           <h2 className="text-lg font-medium text-black mb-2">{post.title}</h2>
           <div className="flex flex-wrap gap-2 mb-2">
-            <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">
-              {post.jobType}
-            </span>
+            <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full">{post.jobType}</span>
 
             {post.roleReq &&
               post.roleReq.slice(0, 2).map((role, index) => (
-                <span
-                  key={index}
-                  className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full"
-                >
+                <span key={index} className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full">
                   {role}
                 </span>
               ))}
@@ -99,8 +88,6 @@ const PostCard = ({ post }) => {
               className="w-full h-auto object-cover max-h-80"
             />
           </div>
-
-          {/* Tags */}
         </div>
       </Link>
 
@@ -121,20 +108,20 @@ const PostCard = ({ post }) => {
           <Share2 className="w-5 h-5" />
           <span className="text-xs">Share</span>
         </button>
-        <button
-          className="flex items-center space-x-1 p-1.5 rounded-lg bg-orange-500 text-white ml-2 hover:border-white"
-          onClick={handleApply}
-        >
-          {/* <Share2 className="w-5 h-5" /> */}
-          <span className="text-xs bold">Apply</span>
+
+        {/* Apply Button */}
+        <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2" onClick={handleApply}>
+          <Send className="w-5 h-5" />
+          <span className="text-xs">Apply</span>
         </button>
+
         <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-auto">
           <Bookmark className="w-5 h-5" />
           <span className="text-xs">Save</span>
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PostCard;
+export default PostCard
