@@ -32,6 +32,14 @@ const nextConfig = {
         destination:
           "http://localhost:4000/application/create/:postId/:googleId",
       },
+      {
+        source: "/api/like/check/:postId/:googleId",
+        destination: "http://localhost:4000/like/check/:postId/:googleId",
+      },
+      {
+        source: "/api/like/toggle/:postId/:googleId",
+        destination: "http://localhost:4000/like/toggle/:postId/:googleId",
+      },
     ];
   },
 };
