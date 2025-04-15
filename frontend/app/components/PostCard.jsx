@@ -5,9 +5,12 @@ import { ArrowBigUp, ArrowBigDown, MessageSquare, Share2, Bookmark, Send } from 
 import { useSession } from "next-auth/react"
 import { toast } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { usePathname } from "next/navigation"
+
 
 const PostCard = ({ post }) => {
   const { data: session } = useSession()
+  const pathname = usePathname()
 
   const handleApply = async () => {
     if (!session?.user?.googleId) {
@@ -54,8 +57,13 @@ const PostCard = ({ post }) => {
       <div className="p-3 border-b border-gray-100 flex items-center">
         <div className="text-xs text-gray-500">
           <span className="font-medium text-gray-900">{post.domain}</span>
-          {" • "}
-          <span>Posted by {post.name}</span>
+          {pathname !== "/profile" && (
+            <>
+              {" • "}
+              <span>Posted by {post.name}</span>
+            </>
+          )}
+
         </div>
       </div>
 

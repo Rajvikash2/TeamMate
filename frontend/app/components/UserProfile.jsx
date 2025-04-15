@@ -164,7 +164,7 @@ const UserProfile = ({ profile }) => {
           </div>
 
           {/* Skills & Domains Card */}
-          <div className="mt-4 bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
+          <div className="mt-10 bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-100">
               <h3 className="font-medium text-black">Skills & Interests</h3>
             </div>
@@ -216,7 +216,7 @@ const UserProfile = ({ profile }) => {
           </div>
 
           {/* Activity Stats - Reddit style */}
-          <div className="mt-4 bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
+          <div className="mt-6 bg-white rounded-md shadow-sm border border-gray-200 overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-100">
               <h3 className="font-medium text-black">Activity</h3>
             </div>
