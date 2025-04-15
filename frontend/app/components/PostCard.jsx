@@ -13,9 +13,11 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { usePathname } from "next/navigation";
 
 const PostCard = ({ post }) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   const [hasLiked, setHasLiked] = useState(false);
 
