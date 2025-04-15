@@ -8,7 +8,6 @@ const applicationSchema = new Schema(
       ref: "Post",
       required: true,
     },
-
     googleId: {
       type: String,
       ref: "Profile",
@@ -31,7 +30,7 @@ const applicationSchema = new Schema(
 applicationSchema.pre("save", function (next) {
   const currentDate = new Date();
   const sevenDaysLater = new Date(this.appliedAt);
-  sevenDaysLater.setDate(sevenDaysLater.getDate() + 7);
+  sevenDaysLater.setDate(sevenDaysLater.getDate() + 10);
 
   if (currentDate >= sevenDaysLater && this.status === "Pending") {
     this.status = "Rejected";

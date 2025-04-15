@@ -28,8 +28,9 @@ const nextConfig = {
         destination: "http://localhost:4000/post/create/:path*",
       },
       {
-        source: "/api/application/create/:path*",
-        destination: "http://localhost:4000/application/create/:path*",
+        source: "/api/application/create/:postId/:googleId",
+        destination:
+          "http://localhost:4000/application/create/:postId/:googleId",
       },
     ];
   },

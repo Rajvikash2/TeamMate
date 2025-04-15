@@ -6,6 +6,7 @@ const profileRoute = require("./route/profileRoute");
 const postRoute = require("./route/postRoute");
 const bookmarkRoute = require("./route/bookmarkRoute");
 const likeRoutes = require("./route/likeRoute");
+const applicationRoutes = require("./route/applicationRoute");
 const cors = require("cors");
 
 const app = express();
@@ -26,6 +27,7 @@ app.use("/profile", profileRoute);
 app.use("/post", postRoute);
 app.use("/bookmark", bookmarkRoute);
 app.use("/like", likeRoutes);
+app.use("/application", applicationRoutes)
 
 mongoose
   .connect(process.env.MONGO_URI)

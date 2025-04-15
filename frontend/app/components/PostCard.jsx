@@ -11,9 +11,9 @@ import { useSession } from "next-auth/react";
 const PostCard = ({ post }) => {
   // Format the domain as a tag
   const { data: session } = useSession();
-  const formatDomain = (domain) => {
-    return domain.toLowerCase().replace(/\s+/g, "");
-  };
+  // const formatDomain = (domain) => {
+  //   return domain.toLowerCase().replace(/\s+/g, "");
+  // };
   // const [formData, setFormData] = useState({
   //   postId: "",
   //   googleId: "",
@@ -21,28 +21,26 @@ const PostCard = ({ post }) => {
   // });
   // const {}
   const handleApply = async () => {
-    console.log("apply :", post);
+    // console.log("apply :", post);
     if (!session?.user?.googleId) {
       alert("You must be logged in to apply.");
       return;
     }
 
-    const updatedFormData = {
-      postId: post._id,
-      googleId: post.ownerGoogleId,
-      status: "Pending",
-    };
-
+    // const updatedFormData = {
+    //   postId: post._id,
+    //   googleId: post.ownerGoogleId,
+    //   status: "Pending",
+    // };
     // setFormData(updatedFormData);
 
     try {
-      const res = await fetch(`/api/createapply`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedFormData),
-      });
+      const res = await fetch(
+        `/api/application/create/${post._id}/${session.user.googleId}`,
+        {
+          method: "POST",
+        }
+      );
 
       if (res.ok) {
         alert("Applied successfully!");

@@ -1,17 +1,23 @@
 const express = require("express");
-const router = express.router();
+const router = express.Router();
 
 const {
-  apply_create,
-  apply_get_by_status,
-  apply_get_all,
+  createApplication,
+  getApplicationsForPost,
+  getPendingApplicationByGoogleId,
+  getAcceptedApplicationByGoogleId,
+  getRejectedApplicationByGoogleId,
+//   getPostsByGoogleIdAndStatus,  
 } = require("../controller/applicationController");
 
-const app=express();
+router.post("/create/:postId/:googleId", createApplication);
 
-router.get("/", apply_get_all);
-router.get("/create", apply_create);
+router.get("/:postId", getApplicationsForPost);
+router.get("/pending/:googleId", getPendingApplicationByGoogleId);
+router.get("/accepted/:googleId", getAcceptedApplicationByGoogleId);
+router.get("/rejected/:googleId", getRejectedApplicationByGoogleId);
 
-router.get("/accepted", apply_get_by_status);
+// router.get("/applications/:googleId/:status", getPostsByGoogleIdAndStatus);
+
 
 module.exports = router;
