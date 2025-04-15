@@ -31,7 +31,7 @@ const ApplicationList = ({ postId }) => {
   }, [postId]);
 
   return (
-    <div className="space-y-4">
+    <div className="mt-20 w-[70%] mx-auto space-y-4">
       {loading ? (
         <p className="text-gray-600">Loading applications...</p>
       ) : applications.length === 0 ? (

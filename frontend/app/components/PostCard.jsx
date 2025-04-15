@@ -8,14 +8,18 @@ import {
   Share2,
   Bookmark,
   Send,
+  View,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { usePathname } from "next/navigation";
 
 const PostCard = ({ post }) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
+
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
@@ -104,8 +108,12 @@ const PostCard = ({ post }) => {
       <div className="p-3 border-b border-gray-100 flex items-center">
         <div className="text-xs text-gray-500">
           <span className="font-medium text-gray-900">{post.domain}</span>
-          {" • "}
-          <span>Posted by {post.name}</span>
+          {pathname !== "/profile" && (
+            <>
+              {" • "}
+              <span>Posted by {post.name}</span>
+            </>
+          )}
         </div>
       </div>
 
@@ -167,20 +175,27 @@ const PostCard = ({ post }) => {
           <MessageSquare className="w-5 h-5" />
           <span className="text-xs">Comments</span>
         </button>
-        {/* <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2">
-          <Share2 className="w-5 h-5" />
-          <span className="text-xs">View</span>
-        </button> */}
+        {pathname === "/profile" && (
+          <Link
+            href={`myapplication/${post.id || post._id}`}
+            className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2"
+          >
+            <View className="w-5 h-5" />
+            <span className="text-xs">View Application</span>
+          </Link>
+        )}
 
         {/* Apply Button */}
 
-        <button
-          className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2"
-          onClick={handleApply}
-        >
-          <Send className="w-5 h-5" />
-          <span className="text-xs">Apply</span>
-        </button>
+        {pathname !== "/profile" && (
+          <button
+            className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-2"
+            onClick={handleApply}
+          >
+            <Send className="w-5 h-5" />
+            <span className="text-xs">Apply</span>
+          </button>
+        )}
 
         <button className="flex items-center space-x-1 p-1.5 rounded-md hover:bg-gray-100 ml-auto">
           <Bookmark className="w-5 h-5" />
