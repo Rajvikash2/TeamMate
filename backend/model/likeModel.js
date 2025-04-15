@@ -17,4 +17,6 @@ const likeSchema = new Schema(
   { timestamps: true }
 );
 
+likeSchema.index({ postId: 1, googleId: 1 }, { unique: true });
+
 module.exports = mongoose.model("Like", likeSchema);

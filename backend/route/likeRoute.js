@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { likePost, unlikePost, getPostLikes } = require("../controller/likeController");
+const {
+  getPostLikes,
+  toggleLike,
+  check,
+} = require("../controller/likeController");
 
-router.post("/:postId/like", likePost);
-router.post("/:postId/unlike", unlikePost); 
-router.get("/:postId/likes", getPostLikes); 
-
+// router.post("/:postId/like", likePost);
+// router.post("/:postId/unlike", unlikePost);
+router.post("/toggle/:postId/:googleId", toggleLike);
+router.get("/:postId/likes", getPostLikes);
+router.get("/check/:postId/:googleId", check);
 module.exports = router;

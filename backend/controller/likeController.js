@@ -1,42 +1,49 @@
-const Like = require("../model/likeModel")
+const Like = require("../model/likeModel");
 const Post = require("../model/postModel");
+const { post } = require("../route/applicationRoute");
 
 // Like a Post
-const likePost = async (req, res) => {
-  try {
-    const { postId } = req.params;
-    const { googleId } = req.body;
 
+const check = async (req, res) => {
+  const { postId, googleId } = req.params;
+
+  try {
+    // console.log(postId, googleId);
     const existingLike = await Like.findOne({ postId, googleId });
 
     if (existingLike) {
-      return res.status(400).json({ message: "Already liked this post" });
+      // Unlike
+
+      return res.status(200).json({ message: "Like ", hasLiked: false });
+    } else {
+      // Like
+
+      return res.status(201).json({ message: "unlike", hasLiked: true });
     }
-
-    const like = new Like({ postId, googleId });
-    await like.save();
-
-    res.status(201).json({ message: "Post liked", like });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error check like:", error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
+const toggleLike = async (req, res) => {
+  const { postId, googleId } = req.params;
 
-// Unlike a Post
-const unlikePost = async (req, res) => {
   try {
-    const { postId } = req.params;
-    const { googleId } = req.body;
+    console.log(postId, googleId);
+    const existingLike = await Like.findOne({ postId, googleId });
 
-    const like = await Like.findOneAndDelete({ postId, googleId });
-
-    if (!like) {
-      return res.status(404).json({ message: "Like not found" });
+    if (existingLike) {
+      // Unlike
+      await Like.deleteOne({ _id: existingLike._id });
+      return res.status(200).json({ message: "Like removed", hasLiked: false });
+    } else {
+      // Like
+      await Like.create({ postId, googleId });
+      return res.status(201).json({ message: "Post liked", hasLiked: true });
     }
-
-    res.status(200).json({ message: "Post unliked" });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error("Error toggling like:", error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -46,7 +53,7 @@ const getPostLikes = async (req, res) => {
     const { postId } = req.params;
 
     const likes = await Like.find({ postId })
-      .populate("googleId", "name") 
+      .populate("googleId", "name")
       .select("googleId");
 
     res.status(200).json({
@@ -60,5 +67,4 @@ const getPostLikes = async (req, res) => {
   }
 };
 
-
-module.exports = { likePost, unlikePost, getPostLikes }
+module.exports = { check, toggleLike, getPostLikes };
