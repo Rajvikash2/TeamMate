@@ -14,11 +14,11 @@ const check = async (req, res) => {
     if (existingLike) {
       // Unlike
 
-      return res.status(200).json({ message: "Like ", hasLiked: false });
+      return res.status(200).json({ message: "Like ", hasLiked: true });
     } else {
       // Like
 
-      return res.status(201).json({ message: "unlike", hasLiked: true });
+      return res.status(201).json({ message: "unlike", hasLiked: false });
     }
   } catch (error) {
     console.error("Error check like:", error);
